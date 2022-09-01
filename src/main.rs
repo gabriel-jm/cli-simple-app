@@ -3,7 +3,8 @@ use std::{
   process,
   thread,
   time,
-  fs::File
+  fs::File,
+  path::Path
 };
 
 fn main() {
@@ -38,20 +39,13 @@ fn sign_in() {
     + "\"}"
   ;
 
-  File::options()
-    .create(true)
-    .append(true)
-    .open("./src/data.json")
-    .expect("Unable to create new user")
-    .write(data.as_ref())
-    .expect("Unable to create new user")
-  ;
+  append_to_file("./src/data.json", data.as_ref());
 
   home();
 }
 
 fn welcome() {
-  print_multi_lines([
+  print_multi_lines(vec![
     "# Home\n",
     "Welcome to the store",
     "\n\tYou're not current loged",
@@ -59,7 +53,7 @@ fn welcome() {
     " signin - Create an account",
     " login - Log in an existing account",
     " q - Exit application"
-  ].to_vec());
+  ]);
 
   print!("\n> ");
 }
@@ -122,4 +116,40 @@ fn read_input(text_before: Option<&str>) -> String {
   ;
 
   return String::from(data.trim());
+}
+
+fn append_to_file(path: &str, data: &str) {
+  if !Path::new(path).exists() {
+    File::create(path)
+      .expect("Unable to create file")
+      .write(String::from("[]").as_ref())
+      .expect("Unable to create file")
+    ;
+  }
+
+  let mut from_file = String::new();
+
+  File::options()
+    .read(true)
+    .open(path)
+    .expect("Unable to create new user")
+    .read_to_string(&mut from_file)
+    .expect("Unable to create new user")
+  ;
+
+  let new_data = 
+    if from_file.len() == 2 {
+      "[".to_owned() + data.as_ref() + "]"
+    } else {
+      from_file.replace("]", ",") + data.as_ref() + "]"
+    }
+  ;
+
+  File::options()
+    .write(true)
+    .open(path)
+    .expect("Unable to create new user")
+    .write(new_data.as_ref())
+    .expect("Unable to create new user")
+  ;
 }
