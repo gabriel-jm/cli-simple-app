@@ -33,6 +33,13 @@ fn create_account() {
   let name = read_input(Some("Enter your name: "));
   let password = read_input(Some("Enter your password: "));
 
+  if name.eq("q") || password.eq("q") {
+    println!("\nCancelling and returning to home...\n");
+    pause();
+    home();
+    return;
+  }
+
   let data = "{".to_owned()
     + "\"id\":\""
     + uuid::Uuid::new_v4().to_string().as_ref()
@@ -62,7 +69,7 @@ fn welcome() {
 }
 
 fn not_found() {
-  println!("\x1b[93m\n** Command not found **\n\x1b[0m");
+  println!("{}", bright_yellow("\n** Command not found **\n"));
   sleep(500);
   pause();
   home();
@@ -158,5 +165,9 @@ fn append_to_file(path: &str, data: &str) {
 }
 
 fn bright_cyan(text: &str) -> String {
-  "\x1b[96m".to_owned() + text + "\x1b[0m"
+  return "\x1b[96m".to_owned() + text + "\x1b[0m";
+}
+
+fn bright_yellow(text: &str) -> String {
+  return "\x1b[93m".to_owned() + text + "\x1b[0m";
 }
