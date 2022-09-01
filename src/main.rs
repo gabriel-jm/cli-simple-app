@@ -6,6 +6,7 @@ use std::{
   fs::File,
   path::Path
 };
+use uuid;
 
 fn main() {
   home();
@@ -19,20 +20,23 @@ fn home() {
   let command = read_input(None);
 
   match command.as_ref() {
-    "signin" => sign_in(),
+    "c" => create_account(),
     "q" => println!("\nExiting..."),
     _ => not_found()
   }
 }
 
-fn sign_in() {
+fn create_account() {
   clear();
-  println!("# Sign In\n\n");
+  println!("{}", bright_cyan("# Create account\n\n"));
 
   let name = read_input(Some("Enter your name: "));
   let password = read_input(Some("Enter your password: "));
 
-  let data = "{\"name\":\"".to_owned()
+  let data = "{".to_owned()
+    + "\"id\":\""
+    + uuid::Uuid::new_v4().to_string().as_ref()
+    + "\",\"name\":\""
     + name.as_ref()
     + "\",\"password\":\""
     + password.as_ref()
@@ -40,18 +44,17 @@ fn sign_in() {
   ;
 
   append_to_file("./src/data.json", data.as_ref());
-
   home();
 }
 
 fn welcome() {
   print_multi_lines(vec![
-    "# Home\n",
+    bright_cyan("# Home\n").as_ref(),
     "Welcome to the store",
     "\n\tYou're not current loged",
     "\nCommands:",
-    " signin - Create an account",
-    " login - Log in an existing account",
+    " c - Create an account",
+    " l - Log in an existing account",
     " q - Exit application"
   ]);
 
@@ -152,4 +155,8 @@ fn append_to_file(path: &str, data: &str) {
     .write(new_data.as_ref())
     .expect("Unable to create new user")
   ;
+}
+
+fn bright_cyan(text: &str) -> String {
+  "\x1b[96m".to_owned() + text + "\x1b[0m"
 }
