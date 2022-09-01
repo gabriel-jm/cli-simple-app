@@ -1,4 +1,10 @@
-use std::{io::{self, Write, Read}, process, thread, time};
+use std::{
+  io::{self, Write, Read},
+  process,
+  thread,
+  time,
+  fs::File
+};
 
 fn main() {
   home();
@@ -25,7 +31,22 @@ fn sign_in() {
   let name = read_input(Some("Enter your name: "));
   let password = read_input(Some("Enter your password: "));
 
-  println!("Name: {}, Password: {}", name, password);
+  let data = "{\"name\":\"".to_owned()
+    + name.as_ref()
+    + "\",\"password\":\""
+    + password.as_ref()
+    + "\"}"
+  ;
+
+  File::options()
+    .create(true)
+    .append(true)
+    .open("./src/data.json")
+    .expect("Unable to create new user")
+    .write(data.as_ref())
+    .expect("Unable to create new user")
+  ;
+
   home();
 }
 
