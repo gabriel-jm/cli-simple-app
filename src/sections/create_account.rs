@@ -1,11 +1,12 @@
+use colored::Colorize;
+
 use crate::terminal::in_out::{clear, read_input, pause};
-use crate::terminal::colors::{bright_cyan};
 use crate::file::append_to_file;
 use super::home;
 
 pub fn create_account() {
   clear();
-  println!("{}", bright_cyan("# Create account\n\n"));
+  println!("{}", "# Create account\n\n".cyan());
 
   let name = read_input(Some("Enter your name: "));
   let password = read_input(Some("Enter your password: "));
