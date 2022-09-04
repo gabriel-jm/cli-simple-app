@@ -1,33 +1,35 @@
-use colored::Colorize;
-
+use crate::state::Account;
 use crate::terminal::in_out::{clear, read_input, pause};
 use crate::file::append_to_file;
+use super::components::header;
 use super::home;
 
 pub fn create_account() {
   clear();
-  println!("{}", "# Create account\n\n".cyan());
+  header("Create account", &None);
 
-  let name = read_input(Some("Enter your name: "));
+  let name = read_input(Some("\nEnter your name: "));
   let password = read_input(Some("Enter your password: "));
 
   if name.eq("q") || password.eq("q") {
     println!("\nCancelling and returning to home...\n");
     pause();
-    home();
+    home(None);
     return;
   }
 
-  let data = "{".to_owned()
-    + "\"id\":\""
-    + uuid::Uuid::new_v4().to_string().as_ref()
-    + "\",\"name\":\""
-    + name.as_ref()
-    + "\",\"password\":\""
-    + password.as_ref()
-    + "\"}"
-  ;
+  let data = Account {
+    id: uuid::Uuid::new_v4().to_string(),
+    name
+  };
 
-  append_to_file("./src/data.json", data.as_ref());
-  home();
+  let json_data = format!(
+    "{{\"id\":\"{}\",\"name\":\"{}\",\"password\":\"{}\"}}",
+    data.id,
+    data.name,
+    password,
+  );
+
+  append_to_file("./src/data.json", json_data.as_ref());
+  home(Some(data));
 }
