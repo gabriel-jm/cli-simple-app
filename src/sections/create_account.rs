@@ -1,3 +1,4 @@
+use serde_json::json;
 use crate::state::Account;
 use crate::terminal::in_out::{clear, read_input, pause};
 use crate::file::append_to_file;
@@ -23,13 +24,13 @@ pub fn create_account() {
     name
   };
 
-  let json_data = format!(
-    "{{\"id\":\"{}\",\"name\":\"{}\",\"password\":\"{}\"}}",
-    data.id,
-    data.name,
-    password,
-  );
+  let json_data = json!({
+    "id": data.id,
+    "name": data.name,
+    "password": password
+  });
 
-  append_to_file("./src/data.json", json_data.as_ref());
+  append_to_file("./src/data.json", json_data.to_string().as_ref());
+
   home(Some(data));
 }
