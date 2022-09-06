@@ -1,23 +1,5 @@
 use std::{io::{self, Write, Read}, process, thread, time};
 
-use colored::Colorize;
-
-pub fn print_multi_lines(texts: Vec<Vec<&str>>) {
-  for text in texts {
-    let colored_text = match text.get(1) {
-      Some(color) => match color {
-        &"cyan" => text[0].cyan(),
-        &"yellow" => text[0].yellow(),
-        &"black" => text[0].black(),
-        _ => text[0].white()
-      },
-      None => text[0].white()
-    };
-
-    println!("{}", colored_text);
-  }
-}
-
 pub fn clear() {
   process::Command::new("clear")
     .status()

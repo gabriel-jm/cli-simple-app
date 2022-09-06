@@ -10,9 +10,17 @@ pub fn create_account() {
   header("Create account", &None);
 
   let name = read_input(Some("\nEnter your name: "));
+
+  if name.eq("q") {
+    println!("\nCancelling and returning to home...\n");
+    pause();
+    home(None);
+    return;
+  }
+
   let password = read_input(Some("Enter your password: "));
 
-  if name.eq("q") || password.eq("q") {
+  if password.eq("q") {
     println!("\nCancelling and returning to home...\n");
     pause();
     home(None);

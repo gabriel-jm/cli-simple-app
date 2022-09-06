@@ -1,4 +1,4 @@
-use crate::terminal::in_out::{clear, flush_output, read_input, print_multi_lines};
+use crate::terminal::in_out::{clear, flush_output, read_input};
 use super::{create_account, not_found};
 use crate::state::Account;
 use super::components::header;
@@ -19,14 +19,14 @@ pub fn home(account: Option<Account>) {
 
 fn welcome(account: &Option<Account>) {
   header("Home", account);
-  println!("\nWelcome to the store");
 
-  print_multi_lines(vec![
-    vec!["\nCommands:"],
-    vec![" c - Create an account"],
-    vec![" l - Log in an existing account"],
-    vec![" q - Exit application"]
-  ]);
+  print!(r#"
+Welcome to the store
 
-  print!("\n> ");
+Commands:
+  c - Create an account
+  l - Log in an existing account
+  q - Exit application
+
+>"#);
 }
