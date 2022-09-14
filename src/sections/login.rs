@@ -1,8 +1,9 @@
 use std::{fs::File, io::Read};
 
 use colored::Colorize;
+use serde_json::Value;
 
-use crate::{state::Account, terminal::in_out::{read_input, pause, clear}, sections::home};
+use crate::{state::Account, terminal::in_out::{read_input, pause, clear}, sections::home, file::append_to_file};
 
 use super::components::header;
 
@@ -41,9 +42,19 @@ pub fn login(account: Option<Account>) {
   ;
 
   if json_data.is_empty() {
+    append_to_file("./src/data.json", "[]");
     println!("\n{}\n", "** User not found **".yellow());
     pause();
-    home(account);
-    return;
+    home(account)
   }
+
+  let users_list = match serde_json::from_str::<Value>(&json_data) {
+    Ok(data) => data,
+    Err(_) => {
+      println!("\nUnable to read file data");
+      Value::Array(vec![])
+    }
+  };
+
+  println!("Position one: {}", users_list[0]);
 }
