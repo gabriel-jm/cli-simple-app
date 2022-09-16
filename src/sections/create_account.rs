@@ -1,15 +1,24 @@
+use colored::Colorize;
+use serde::{Deserialize, Serialize};
 use serde_json::json;
 use crate::state::Account;
 use crate::terminal::in_out::{clear, read_input, pause};
-use crate::file::append_to_file;
+use crate::file::{append_to_file, get_file_json};
 use super::components::header;
 use super::home;
+
+#[derive(Serialize, Deserialize)]
+struct CreatedAccount {
+  id: String,
+  name: String,
+  password: String
+}
 
 pub fn create_account() {
   clear();
   header("Create account", &None);
 
-  let name = read_input(Some("\nEnter your name: "));
+  let name = read_input(Some("\nName: "));
 
   if name.eq("q") {
     println!("\nCancelling and returning to home...\n");
@@ -18,13 +27,29 @@ pub fn create_account() {
     return;
   }
 
-  let password = read_input(Some("Enter your password: "));
+  let password = read_input(Some("Password: "));
 
   if password.eq("q") {
     println!("\nCancelling and returning to home...\n");
     pause();
     home(None);
     return;
+  }
+
+  let json = get_file_json("./src/data.json");
+
+  let stored_data: Vec<CreatedAccount> = serde_json::from_str(&json)
+    .expect("Unable to parse JSON")
+  ;
+
+  let exists = stored_data.into_iter().any(
+    |user| name.eq(&user.name)
+  );
+
+  if exists {
+    println!("\n{}", "❗ Name already in use\n".yellow());
+    pause();
+    return create_account();
   }
 
   let data = Account {
