@@ -60,12 +60,10 @@ pub fn login(account: Option<Account>) {
     |user| name.eq(&user.name) && password.eq(&user.password)
   );
 
-  match user {
-    Some(user) => home(Some(Account {
-      id: user.id,
-      name: user.name
-    })),
-    None => on_user_not_found()
+  if let Some(user_data) = user {
+    home(Some(Account { id: user_data.id, name: user_data.name }))
+  } else {
+    on_user_not_found()
   }
 }
 
