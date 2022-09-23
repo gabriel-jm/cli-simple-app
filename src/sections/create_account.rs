@@ -1,24 +1,23 @@
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
-use serde_json::json;
 use crate::state::Account;
 use crate::terminal::in_out::{clear, read_input, pause};
-use crate::file::{append_to_file, get_file};
+use crate::file::{rewrite_file, get_file};
 use super::components::header;
 use super::home;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 struct CreatedAccount {
   id: String,
   name: String,
   password: String
 }
 
-pub fn create_account() {
+pub fn create_account(account: Option<Account>) {
   clear();
-  header("Create account", &None);
+  header("Create account", &account);
 
-  println!("{}", "\nEnter 'q' in any field to cancel".black());
+  println!("{}", "\nEnter 'q' in any field to cancel".bright_black());
 
   let name = read_input(Some("\nName: "));
 
@@ -40,18 +39,18 @@ pub fn create_account() {
 
   let json = get_file("./data.json");
 
-  let stored_data: Vec<CreatedAccount> = serde_json::from_str(&json)
+  let mut stored_data: Vec<CreatedAccount> = serde_json::from_str(&json)
     .expect("Unable to parse JSON")
   ;
 
-  let exists = stored_data.into_iter().any(
+  let exists = stored_data.clone().into_iter().any(
     |user| name.eq(&user.name)
   );
 
   if exists {
     println!("\n{}", "❗ Name already in use\n".yellow());
     pause();
-    return create_account();
+    return create_account(account);
   }
 
   let data = Account {
@@ -59,13 +58,16 @@ pub fn create_account() {
     name
   };
 
-  let json_data = json!({
-    "id": data.id,
-    "name": data.name,
-    "password": password
+  stored_data.push(CreatedAccount {
+    id: data.id.clone(),
+    name: data.name.clone(),
+    password
   });
 
-  append_to_file("./data.json", json_data.to_string().as_ref());
+  rewrite_file(
+    "./data.json",
+    serde_json::json!(&stored_data).to_string().as_ref()
+  );
 
   home(Some(data), 1);
 }

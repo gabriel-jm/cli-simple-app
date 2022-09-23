@@ -1,7 +1,7 @@
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
 
-use crate::{state::Account, terminal::in_out::{read_input, pause, clear}, sections::home, file::{append_to_file, get_file}};
+use crate::{state::Account, terminal::in_out::{read_input, pause, clear}, sections::home, file::get_file};
 
 use super::components::header;
 
@@ -16,18 +16,18 @@ pub fn login(account: Option<Account>) {
   clear();
   header("Login", &account);
 
-  println!("{}", "\nEnter 'q' in any field to cancel".black());
+  println!("{}", "\nEnter 'q' in any field to cancel".bright_black());
 
   let name = read_input(Some("\nName: "));
 
   if name.eq("q") {
-    return return_to_home();
+    return return_to_home(account);
   }
 
   let password = read_input(Some("Password: "));
 
   if password.eq("q") {
-    return return_to_home();
+    return return_to_home(account);
   }
 
   let json_data = get_file("./data.json");
@@ -47,19 +47,18 @@ pub fn login(account: Option<Account>) {
   if let Some(user_data) = user {
     home(Some(Account { id: user_data.id, name: user_data.name }), 1)
   } else {
-    on_user_not_found()
+    on_user_not_found();
+    home(account, 1);
   }
 }
 
 fn on_user_not_found() {
-  append_to_file("./data.json", "[]");
   println!("\n{}\n", "** User not found **".yellow());
   pause();
-  home(None, 1);
 }
 
-fn return_to_home() {
+fn return_to_home(account: Option<Account>) {
   println!("\nCancelling and returning to home...\n");
   pause();
-  home(None, 1);
+  home(account, 1);
 }

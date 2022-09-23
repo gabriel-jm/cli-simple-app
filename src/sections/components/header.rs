@@ -7,6 +7,6 @@ pub fn header(title: &str, account: &Option<Account>) {
   
   match account {
     Some(acc) => println!("\t\t\t[{}]", acc.name.green()),
-    None => println!("{}", "\t\t\tNot logged".black())
+    None => println!("{}", "\t\t\tNot logged".bright_black())
   };
 }

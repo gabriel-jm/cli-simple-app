@@ -49,7 +49,7 @@ fn verify_position(position: u8, target: u8) -> String {
 fn navigate(account: Option<Account>, position: u8) {
   match position {
     1 => login(account),
-    2 => create_account(),
+    2 => create_account(account),
     3 => println!("\nExiting..."),
     _ => not_found(account)
   }  
