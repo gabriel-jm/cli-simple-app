@@ -16,6 +16,8 @@ pub fn login(account: Option<Account>) {
   clear();
   header("Login", &account);
 
+  println!("{}", "\nEnter 'q' in any field to cancel".black());
+
   let name = read_input(Some("\nName: "));
 
   if name.eq("q") {

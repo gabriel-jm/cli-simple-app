@@ -18,6 +18,8 @@ pub fn create_account() {
   clear();
   header("Create account", &None);
 
+  println!("{}", "\nEnter 'q' in any field to cancel".black());
+
   let name = read_input(Some("\nName: "));
 
   if name.eq("q") {
