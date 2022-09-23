@@ -1,33 +1,56 @@
-use crate::terminal::in_out::{clear, flush_output, read_input};
+use console::{Term, Key};
+
+use crate::terminal::in_out::{clear, flush_output};
 use super::{create_account, not_found, login};
 use crate::state::Account;
 use super::components::header;
 
-pub fn home(account: Option<Account>) {
+pub fn home(account: Option<Account>, position: u8) {
   clear();
-  welcome(&account);
+  welcome(&account, position);
   flush_output();
 
-  let command = read_input(None);
+  let stdout = Term::buffered_stdout();
 
-  match command.as_ref() {
-    "l" => login(account),
-    "c" => create_account(),
-    "q" => println!("\nExiting..."),
-    _ => not_found(account)
+  if let Ok(character) = stdout.read_key() {
+    match character {
+      Key::ArrowUp => home(account, u8::max(position - 1, 1)),
+      Key::ArrowDown => home(account, u8::min(position + 1, 3)),
+      Key::Enter => navigate(account, position),
+      Key::Char(c) => {
+        if c == 'q' {
+          return ();
+        }
+
+        home(account, position);
+      },
+      _ => home(account, position)
+    }
   }
 }
 
-fn welcome(account: &Option<Account>) {
+fn welcome(account: &Option<Account>, position: u8) {
   header("Home", account);
 
-  print!(r#"
-Welcome to the store
+  println!("\nWelcome!!!\n");
+  println!("[{}] - Log in an existing account", verify_position(position, 1));
+  println!("[{}] - Create an account", verify_position(position, 2));
+  println!("[{}] - Exit application", verify_position(position, 3));
+}
 
-Commands:
-  l - Log in an existing account
-  c - Create an account
-  q - Exit application
+fn verify_position(position: u8, target: u8) -> String {
+  if position == target {
+    return String::from("x");
+  } else {
+    return String::from(" ");
+  }
+}
 
-> "#);
+fn navigate(account: Option<Account>, position: u8) {
+  match position {
+    1 => login(account),
+    2 => create_account(),
+    3 => println!("\nExiting..."),
+    _ => not_found(account)
+  }  
 }

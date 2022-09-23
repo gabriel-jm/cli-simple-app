@@ -1,5 +1,5 @@
 use std::{fs::File, io::Read};
-pub fn get_file_json(path: &str) -> String {
+pub fn get_file(path: &str) -> String {
   let mut json_data = String::new();
 
   File::options()

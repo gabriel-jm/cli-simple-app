@@ -1,9 +1,7 @@
-use std::{fs::File, io::Read};
-
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
 
-use crate::{state::Account, terminal::in_out::{read_input, pause, clear}, sections::home, file::append_to_file};
+use crate::{state::Account, terminal::in_out::{read_input, pause, clear}, sections::home, file::{append_to_file, get_file}};
 
 use super::components::header;
 
@@ -21,32 +19,16 @@ pub fn login(account: Option<Account>) {
   let name = read_input(Some("\nName: "));
 
   if name.eq("q") {
-    println!("\nCancelling and returning to home...\n");
-    pause();
-    home(None);
-    return;
+    return return_to_home();
   }
 
   let password = read_input(Some("Password: "));
 
   if password.eq("q") {
-    println!("\nCancelling and returning to home...\n");
-    pause();
-    home(None);
-    return;
+    return return_to_home();
   }
 
-  let mut json_data = String::new();
-
-  File::options()
-    .create(true)
-    .append(true)
-    .read(true)
-    .open("./src/data.json")
-    .expect("Unable to open file")
-    .read_to_string(&mut json_data)
-    .expect("Unable to read file")
-  ;
+  let json_data = get_file("./src/data.json");
 
   if json_data.is_empty() {
     return on_user_not_found();
@@ -61,7 +43,7 @@ pub fn login(account: Option<Account>) {
   );
 
   if let Some(user_data) = user {
-    home(Some(Account { id: user_data.id, name: user_data.name }))
+    home(Some(Account { id: user_data.id, name: user_data.name }), 1)
   } else {
     on_user_not_found()
   }
@@ -71,5 +53,11 @@ fn on_user_not_found() {
   append_to_file("./src/data.json", "[]");
   println!("\n{}\n", "** User not found **".yellow());
   pause();
-  home(None);
+  home(None, 1);
+}
+
+fn return_to_home() {
+  println!("\nCancelling and returning to home...\n");
+  pause();
+  home(None, 1);
 }

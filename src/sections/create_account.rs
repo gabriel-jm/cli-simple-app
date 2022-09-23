@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use crate::state::Account;
 use crate::terminal::in_out::{clear, read_input, pause};
-use crate::file::{append_to_file, get_file_json};
+use crate::file::{append_to_file, get_file};
 use super::components::header;
 use super::home;
 
@@ -23,7 +23,7 @@ pub fn create_account() {
   if name.eq("q") {
     println!("\nCancelling and returning to home...\n");
     pause();
-    home(None);
+    home(None, 1);
     return;
   }
 
@@ -32,11 +32,11 @@ pub fn create_account() {
   if password.eq("q") {
     println!("\nCancelling and returning to home...\n");
     pause();
-    home(None);
+    home(None, 1);
     return;
   }
 
-  let json = get_file_json("./src/data.json");
+  let json = get_file("./src/data.json");
 
   let stored_data: Vec<CreatedAccount> = serde_json::from_str(&json)
     .expect("Unable to parse JSON")
@@ -65,5 +65,5 @@ pub fn create_account() {
 
   append_to_file("./src/data.json", json_data.to_string().as_ref());
 
-  home(Some(data));
+  home(Some(data), 1);
 }

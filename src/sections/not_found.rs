@@ -7,5 +7,5 @@ pub fn not_found(account: Option<Account>) {
   println!("{}", "\n⚠ Command not found\n".bright_yellow());
   sleep(500);
   pause();
-  home(account);
+  home(account, 1);
 }

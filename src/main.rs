@@ -6,5 +6,5 @@ mod state;
 use sections::home;
 
 fn main() {
-  home(None);
+  home(None, 1);
 }
