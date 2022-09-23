@@ -8,10 +8,10 @@ use std::{path::Path, fs::File, io::Write};
 use sections::home;
 
 fn main() {
-  if !Path::new("./data.json").exists() {
-    File::create("./data.json")
+  if !Path::new("./database.json").exists() {
+    File::create("./database.json")
       .expect("Unable to create file")
-      .write(String::from("[]").as_ref())
+      .write(String::from("{\"current_user\":null,\"users\":[]}").as_ref())
       .expect("Unable to create file")
     ;
   }

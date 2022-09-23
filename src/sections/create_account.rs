@@ -1,5 +1,5 @@
 use colored::Colorize;
-use crate::state::{Account, CreatedAccount};
+use crate::state::{Account, CreatedAccount, Database};
 use crate::terminal::in_out::{clear, read_input, pause};
 use crate::file::{rewrite_file, get_file};
 use super::components::header;
@@ -29,13 +29,13 @@ pub fn create_account(account: Option<Account>) {
     return;
   }
 
-  let json = get_file("./data.json");
+  let json = get_file("./database.json");
 
-  let mut stored_data: Vec<CreatedAccount> = serde_json::from_str(&json)
+  let mut stored_data: Database = serde_json::from_str(&json)
     .expect("Unable to parse JSON")
   ;
 
-  let exists = stored_data.clone().into_iter().any(
+  let exists = stored_data.users.clone().into_iter().any(
     |user| name.eq(&user.name)
   );
 
@@ -50,14 +50,14 @@ pub fn create_account(account: Option<Account>) {
     name
   };
 
-  stored_data.push(CreatedAccount {
+  stored_data.users.push(CreatedAccount {
     id: data.id.clone(),
     name: data.name.clone(),
     password
   });
 
   rewrite_file(
-    "./data.json",
+    "./database.json",
     serde_json::json!(&stored_data).to_string().as_ref()
   );
 

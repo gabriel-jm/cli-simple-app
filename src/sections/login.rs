@@ -1,6 +1,6 @@
 use colored::Colorize;
 
-use crate::{state::{Account, CreatedAccount}, terminal::in_out::{read_input, pause, clear}, sections::home, file::get_file};
+use crate::{state::{Account, Database}, terminal::in_out::{read_input, pause, clear}, sections::home, file::get_file};
 
 use super::components::header;
 
@@ -22,17 +22,17 @@ pub fn login(account: Option<Account>) {
     return return_to_home(account);
   }
 
-  let json_data = get_file("./data.json");
+  let json_data = get_file("./database.json");
 
   if json_data.is_empty() {
     return on_user_not_found();
   }
 
-  let users_list: Vec<CreatedAccount> = serde_json::from_str(&json_data)
+  let database: Database = serde_json::from_str(&json_data)
     .expect("JSON parse error")
   ;
 
-  let user = users_list.into_iter().find(
+  let user = database.users.into_iter().find(
     |user| name.eq(&user.name) && password.eq(&user.password)
   );
 

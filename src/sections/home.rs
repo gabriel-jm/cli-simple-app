@@ -1,4 +1,5 @@
 use console::{Term, Key};
+use colored::{self, Colorize};
 
 use crate::terminal::in_out::{clear, flush_output};
 use super::{create_account, not_found, login};
@@ -33,6 +34,7 @@ fn welcome(account: &Option<Account>, position: u8) {
   header("Home", account);
 
   println!("\nWelcome!!!\n");
+  println!("{}\n", "Press 'q' to exit.".bright_black());
   println!("[{}] - Log in an existing account", verify_position(position, 1));
   println!("[{}] - Create an account", verify_position(position, 2));
   println!("[{}] - Exit application", verify_position(position, 3));
