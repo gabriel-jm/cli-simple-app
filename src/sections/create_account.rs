@@ -1,17 +1,9 @@
 use colored::Colorize;
-use serde::{Deserialize, Serialize};
-use crate::state::Account;
+use crate::state::{Account, CreatedAccount};
 use crate::terminal::in_out::{clear, read_input, pause};
 use crate::file::{rewrite_file, get_file};
 use super::components::header;
 use super::home;
-
-#[derive(Serialize, Deserialize, Clone)]
-struct CreatedAccount {
-  id: String,
-  name: String,
-  password: String
-}
 
 pub fn create_account(account: Option<Account>) {
   clear();

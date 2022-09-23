@@ -1,16 +1,8 @@
 use colored::Colorize;
-use serde::{Deserialize, Serialize};
 
-use crate::{state::Account, terminal::in_out::{read_input, pause, clear}, sections::home, file::get_file};
+use crate::{state::{Account, CreatedAccount}, terminal::in_out::{read_input, pause, clear}, sections::home, file::get_file};
 
 use super::components::header;
-
-#[derive(Serialize, Deserialize)]
-struct CreatedAccount {
-  id: String,
-  name: String,
-  password: String
-}
 
 pub fn login(account: Option<Account>) {
   clear();
