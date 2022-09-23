@@ -30,7 +30,7 @@ pub fn login(account: Option<Account>) {
     return return_to_home();
   }
 
-  let json_data = get_file("./src/data.json");
+  let json_data = get_file("./data.json");
 
   if json_data.is_empty() {
     return on_user_not_found();
@@ -52,7 +52,7 @@ pub fn login(account: Option<Account>) {
 }
 
 fn on_user_not_found() {
-  append_to_file("./src/data.json", "[]");
+  append_to_file("./data.json", "[]");
   println!("\n{}\n", "** User not found **".yellow());
   pause();
   home(None, 1);

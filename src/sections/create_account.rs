@@ -38,7 +38,7 @@ pub fn create_account() {
     return;
   }
 
-  let json = get_file("./src/data.json");
+  let json = get_file("./data.json");
 
   let stored_data: Vec<CreatedAccount> = serde_json::from_str(&json)
     .expect("Unable to parse JSON")
@@ -65,7 +65,7 @@ pub fn create_account() {
     "password": password
   });
 
-  append_to_file("./src/data.json", json_data.to_string().as_ref());
+  append_to_file("./data.json", json_data.to_string().as_ref());
 
   home(Some(data), 1);
 }
