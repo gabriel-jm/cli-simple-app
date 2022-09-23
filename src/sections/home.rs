@@ -1,7 +1,7 @@
 use console::{Term, Key};
 use colored::{self, Colorize};
 
-use crate::terminal::in_out::{clear, flush_output};
+use crate::terminal::in_out::clear;
 use super::{create_account, not_found, login};
 use crate::state::Account;
 use super::components::header;
@@ -9,7 +9,6 @@ use super::components::header;
 pub fn home(account: Option<Account>, position: u8) {
   clear();
   welcome(&account, position);
-  flush_output();
 
   let stdout = Term::buffered_stdout();
 
@@ -35,14 +34,28 @@ fn welcome(account: &Option<Account>, position: u8) {
 
   println!("\nWelcome!!!\n");
   println!("{}\n", "Press 'q' to exit.".bright_black());
-  println!("[{}] - Log in an existing account", verify_position(position, 1));
-  println!("[{}] - Create an account", verify_position(position, 2));
-  println!("[{}] - Exit application", verify_position(position, 3));
+  options_list(position, vec![
+    "Log in an existing account",
+    "Create an account",
+    "Exit application"
+  ])
+}
+
+fn options_list(position: u8, options: Vec<&str>) {
+  for opt in 0..options.len() {
+    println!(
+      "{}{}{} {}",
+      "(".bright_black(),
+      verify_position(position, u8::try_from(opt + 1).expect("Size excedeed")),
+      ")".bright_black(),
+      options[opt]
+    );
+  }
 }
 
 fn verify_position(position: u8, target: u8) -> String {
   if position == target {
-    return String::from("x");
+    return String::from("✔").green().to_string();
   } else {
     return String::from(" ");
   }
