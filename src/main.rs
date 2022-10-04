@@ -7,13 +7,18 @@ use std::{path::Path, fs::File, io::Write};
 
 use file::get_file;
 use sections::{home, dashboard};
+use serde_json::json;
 use state::{Database, Account};
 
 fn main() {
   if !Path::new("./database.json").exists() {
     File::create("./database.json")
       .expect("Unable to create file")
-      .write(String::from("{\"current_user\":null,\"users\":[]}").as_ref())
+      .write(json!(Database {
+        current_user: None,
+        users: vec![],
+        lists: vec![]
+      }).to_string().as_ref())
       .expect("Unable to create file")
     ;
       

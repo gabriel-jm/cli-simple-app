@@ -41,12 +41,12 @@ pub fn login(account: Option<Account>) {
     database.current_user = Some(user_data.id.clone());
     rewrite_file("./database.json", json!(database).to_string().as_ref());
 
-    home(Some(Account {
+    return home(Some(Account {
       id: user_data.id,
       name: user_data.name
-    }), 1)
+    }), 1);
   }
-
+  
   on_user_not_found();
   home(account, 1);
 }

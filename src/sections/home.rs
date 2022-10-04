@@ -1,14 +1,21 @@
 use console::{Term, Key};
 use colored::{self, Colorize};
 
-use crate::terminal::in_out::clear;
 use super::{create_account, not_found, login};
-use crate::state::Account;
+use crate::{state::Account, terminal::in_out::clear};
 use super::components::header;
 
 pub fn home(account: Option<Account>, position: u8) {
   clear();
-  welcome(&account, position);
+  header("Home", &account);
+
+  println!("\nWelcome!!!\n");
+  println!("{}\n", "Press 'q' to exit.".bright_black());
+  options_list(position, vec![
+    "Log in an existing account",
+    "Create an account",
+    "Exit application"
+  ]);
 
   let stdout = Term::buffered_stdout();
 
@@ -29,35 +36,14 @@ pub fn home(account: Option<Account>, position: u8) {
   }
 }
 
-fn welcome(account: &Option<Account>, position: u8) {
-  header("Home", account);
-
-  println!("\nWelcome!!!\n");
-  println!("{}\n", "Press 'q' to exit.".bright_black());
-  options_list(position, vec![
-    "Log in an existing account",
-    "Create an account",
-    "Exit application"
-  ])
-}
-
 fn options_list(position: u8, options: Vec<&str>) {
   for opt in 0..options.len() {
-    println!(
-      "{}{}{} {}",
-      "(".bright_black(),
-      verify_position(position, u8::try_from(opt + 1).expect("Size excedeed")),
-      ")".bright_black(),
-      options[opt]
-    );
-  }
-}
+    if position == u8::try_from(opt + 1).expect("Size exceeded") {
+      println!("{} {}", "| ".bright_green(), options[opt].bright_green());
+      continue;
+    }
 
-fn verify_position(position: u8, target: u8) -> String {
-  if position == target {
-    return String::from("✔").green().to_string();
-  } else {
-    return String::from(" ");
+    println!("   {}", options[opt]);
   }
 }
 

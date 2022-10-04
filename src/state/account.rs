@@ -1,5 +1,6 @@
 use serde::{Serialize, Deserialize};
 
+#[derive(Clone)]
 pub struct Account {
   pub id: String,
   pub name: String

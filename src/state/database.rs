@@ -1,9 +1,10 @@
 use serde::{Serialize, Deserialize};
 
-use super::CreatedAccount;
+use super::{CreatedAccount, ToDoList};
 
 #[derive(Serialize, Deserialize)]
 pub struct Database {
   pub current_user: Option<String>,
-  pub users: Vec<CreatedAccount>
+  pub users: Vec<CreatedAccount>,
+  pub lists: Vec<ToDoList>
 }
