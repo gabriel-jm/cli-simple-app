@@ -1,6 +1,6 @@
 use console::{Term, Key};
 
-use crate::{state::{Account, Database}, sections::home, file::get_file, terminal::in_out::clear};
+use crate::{state::{Account, Database}, sections::home, file::get_file, terminal::in_out::{clear, flush_output}};
 
 use super::components::header;
 use colored::Colorize;
@@ -15,8 +15,11 @@ pub fn dashboard(account: Account) {
 
   println!("\nYour have a total of {} to do lists.", stored_data.lists.len());
 
-  println!("{}", "\nPress 'o' to logout".bright_black());
-  println!("{}", "Press 'n' to create a new to do list".bright_black());
+  print!("\n{} {}", "n".bold(), "to create a new to do list  |".bright_black());
+  print!("  {} {}", "o".bold(), "to logout  |".bright_black());
+  print!("  {} {}", "q".bold(), "exit\n\n".bright_black());
+
+  flush_output();
 
   let stdout = Term::buffered_stdout();
 

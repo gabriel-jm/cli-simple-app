@@ -6,7 +6,7 @@ pub fn header(title: &str, account: &Option<Account>) {
   print!("{}", format!("🔹 {}", title).cyan());
   
   match account {
-    Some(acc) => println!("\t\t\t[{}]", acc.name.green()),
+    Some(acc) => println!("\t\t\t\t\t[{}]", acc.name.green()),
     None => println!("{}", "\t\t\tNot logged".bright_black())
   };
 }
