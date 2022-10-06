@@ -1,4 +1,5 @@
 use colored::Colorize;
+use crate::sections::dashboard;
 use crate::state::{Account, CreatedAccount, Database};
 use crate::terminal::in_out::{clear, read_input, pause};
 use crate::file::{rewrite_file, get_file};
@@ -14,18 +15,14 @@ pub fn create_account(account: Option<Account>) {
   let name = read_input(Some("\nName: "));
 
   if name.eq("q") {
-    println!("\nCancelling and returning to home...\n");
-    pause();
-    home(None, 1);
+    returning_to_home();
     return;
   }
 
   let password = read_input(Some("Password: "));
 
   if password.eq("q") {
-    println!("\nCancelling and returning to home...\n");
-    pause();
-    home(None, 1);
+    returning_to_home();
     return;
   }
 
@@ -61,5 +58,11 @@ pub fn create_account(account: Option<Account>) {
     serde_json::json!(&stored_data).to_string().as_ref()
   );
 
-  home(Some(data), 1);
+  dashboard(data);
+}
+
+fn returning_to_home() {
+  println!("\nCancelling and returning to home...\n");
+  pause();
+  home(None, 1);
 }

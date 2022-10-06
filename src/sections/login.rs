@@ -1,7 +1,7 @@
 use colored::Colorize;
 use serde_json::json;
 
-use crate::{state::{Account, Database}, terminal::in_out::{read_input, pause, clear}, sections::home, file::{get_file, rewrite_file}};
+use crate::{state::{Account, Database}, terminal::in_out::{read_input, pause, clear}, sections::{home, dashboard}, file::{get_file, rewrite_file}};
 
 use super::components::header;
 
@@ -41,10 +41,10 @@ pub fn login(account: Option<Account>) {
     database.current_user = Some(user_data.id.clone());
     rewrite_file("./database.json", json!(database).to_string().as_ref());
 
-    return home(Some(Account {
+    return dashboard(Account {
       id: user_data.id,
       name: user_data.name
-    }), 1);
+    });
   }
   
   on_user_not_found();
