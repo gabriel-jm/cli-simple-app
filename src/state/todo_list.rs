@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 pub struct ToDoList {
   pub title: String,
   pub user_id: String,
-  pub items: ToDoItem
+  pub items: Vec<ToDoItem>
 }
 
 #[derive(Serialize, Deserialize)]
