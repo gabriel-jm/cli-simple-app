@@ -13,7 +13,8 @@ pub fn dashboard(account: Account) {
     .expect("Unable to get file data")
   ;
 
-  println!("\nYour have a total of {} To Do lists.", stored_data.lists.len());
+  let length = stored_data.lists.len().to_string();
+  println!("\nYour have a total of {} To Do lists.", length.yellow());
 
   print!("\n{} {}", "n".bold(), "to create a new to do list  |".bright_black());
   print!("  {} {}", "o".bold(), "to logout  |".bright_black());

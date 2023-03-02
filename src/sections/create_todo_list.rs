@@ -16,19 +16,22 @@ pub fn create_todo_list(props: CreateToDoListProps) {
   clear();
   header("Create To Do list", &Some(props.account.clone()));
 
-  println!("{}", "\nEnter 'q' in any field to cancel".bright_black());
-
   let title = match props.title {
-    Some(ref title) => String::from(title),
-    None => read_input(Some("\nTitle: "))
+    Some(ref title) => {
+      let new_title = String::from(title);
+      println!("\nList title: {}", title.bold());
+      new_title
+    },
+    None => {
+      println!("{}", "\nEnter 'q' in any field to cancel".bright_black());
+      read_input(Some("\nTitle: "))
+    }
   };
 
   if title.eq("q") {
     returning_to_dashboard(props.account);
     return;
   }
-
-  println!("\nList title: {}", title.bold());
 
   print!("\n{} {}", "a".bold(), "add item to list  |".bright_black());
   print!("  {} {}", "q".bold(), "return to dashboard\n\n".bright_black());
@@ -57,7 +60,10 @@ pub fn create_todo_list(props: CreateToDoListProps) {
         return dashboard(props.account);
       }
 
-      return create_todo_list(props)
+      return create_todo_list(CreateToDoListProps {
+        title: Some(title),
+        ..props
+      })
     }
       
     return create_todo_list(props)
