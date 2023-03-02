@@ -1,14 +1,15 @@
 use colored::Colorize;
 use console::{Term, Key};
+use create_todo_item::create_todo_item;
 
-use crate::{state::Account, terminal::in_out::{clear, read_input, pause, flush_output}, sections::dashboard};
+use crate::{state::{Account, ToDoItem}, terminal::in_out::{clear, read_input, pause, flush_output}, sections::{dashboard, create_todo_item::{self, CreateToDoItemProps}}};
 
 use super::components::header;
 
 pub struct CreateToDoListProps {
   pub account: Account,
   pub title: Option<String>,
-  pub items: Option<Vec<String>>
+  pub items: Vec<ToDoItem>
 }
 
 pub fn create_todo_list(props: CreateToDoListProps) {
@@ -27,6 +28,8 @@ pub fn create_todo_list(props: CreateToDoListProps) {
     return;
   }
 
+  println!("\nList title: {}", title.bold());
+
   print!("\n{} {}", "a".bold(), "add item to list  |".bright_black());
   print!("  {} {}", "q".bold(), "return to dashboard\n\n".bright_black());
 
@@ -37,7 +40,17 @@ pub fn create_todo_list(props: CreateToDoListProps) {
   if let Ok(character) = stdout.read_key() {
     if let Key::Char(c) = character {
       if c == 'a' {
-        return create_todo_list(props);
+        let items = create_todo_item(CreateToDoItemProps {
+          account: &Some(props.account.clone()),
+          list_title: &title[..],
+          items: &props.items
+        });
+
+        return create_todo_list(CreateToDoListProps {
+          title: Some(title),
+          items,
+          ..props
+        });
       }
 
       if c == 'q' {

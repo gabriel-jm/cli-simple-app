@@ -30,7 +30,7 @@ pub fn dashboard(account: Account) {
           return create_todo_list(CreateToDoListProps {
             account,
             title: None,
-            items: None
+            items: Vec::new()
           });
         }
         

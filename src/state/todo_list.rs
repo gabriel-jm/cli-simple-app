@@ -7,7 +7,7 @@ pub struct ToDoList {
   pub items: Vec<ToDoItem>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct ToDoItem {
   pub name: String,
   pub checked: bool
